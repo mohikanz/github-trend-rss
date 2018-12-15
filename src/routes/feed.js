@@ -1,10 +1,13 @@
 const Router = require('express').Router();
+import trending from 'trending-github';
 
 Router.get("/", (req, res) => {
-  res.status(200).json({
-    status: 200,
-    message: "OK"
-  });
+  const lang   = req.query.lang;
+  const period = req.query.period;
+
+  trending(period, lang).then(repos => {
+    res.status(200).json(repos);
+  })
 });
 
 module.exports = Router;
