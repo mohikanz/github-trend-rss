@@ -1,0 +1,26 @@
+{
+  "name": "github-trend-rss",
+  "version": "1.0.0",
+  "main": "dist/app.js",
+  "repository": "git@github.com:mohikanz/github-trend-rss.git",
+  "author": "mohikanz",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/app.js",
+    "build": "babel src --out-dir dist",
+    "boot": "node dist/app.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "trending-github": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.5",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "nodemon": "^1.18.6"
+  }
+}
