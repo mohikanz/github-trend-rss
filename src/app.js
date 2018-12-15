@@ -1,3 +1,5 @@
+process.env.TZ = "Asia/Tokyo";
+
 import express from 'express';
 
 const app = express();
