@@ -11,9 +11,10 @@
     "boot": "node dist/app.js"
   },
   "dependencies": {
-    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "feed": "^2.0.1",
+    "moment": "^2.23.0",
+    "moment-timezone": "^0.5.23",
     "trending-github": "^1.1.0"
   },
   "devDependencies": {

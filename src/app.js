@@ -1,5 +1,3 @@
-process.env.TZ = "Asia/Tokyo";
-
 import express from 'express';
 
 const app = express();
@@ -9,7 +7,6 @@ app.disable('x-powered-by');
 
 // APIのHeader設定
 app.use((req, res, next) => {
-  res.setHeader("Cache-Control", "no-store");
   res.setHeader("Content-Language", "ja");
   next();
 });
