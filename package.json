@@ -6,9 +6,16 @@
   "author": "mohikanz",
   "license": "Apache-2.0",
   "scripts": {
+    "check": "standard",
+    "fix": "standard --fix",
     "start": "nodemon --exec babel-node src/app.js",
     "build": "babel src --out-dir dist",
     "boot": "node dist/app.js"
+  },
+  "standard": {
+    "ignore": [
+      "/dist/"
+    ]
   },
   "dependencies": {
     "express": "^4.16.4",
