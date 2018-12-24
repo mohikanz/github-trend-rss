@@ -1,14 +1,10 @@
 import { Feed } from 'feed'
 import trending from 'trending-github'
-// import Moment from 'moment-timezone'
+import Moment from 'moment'
 const Router = require('express').Router()
 
-const updatedDate = new Date()
-
-updatedDate.setHours(0)
-updatedDate.setMinutes(0)
-updatedDate.setSeconds(0)
-updatedDate.setMilliseconds(0)
+// const updatedDate = new Date()
+const updatedDate = Moment().hour(0).minute(0).second(0).millisecond(0)
 
 const feed = new Feed({
   title: 'GitHub Trend RSS',
@@ -17,7 +13,6 @@ const feed = new Feed({
   link: 'https://github.com/trending',
   generator: 'https://github.com/mohikanz/github-trend-rss',
   copyright: '(c) 2018 mohikanz',
-  updated: updatedDate,
   feedLinks: {
     atom: 'https://rss.oldbigbuddha.net/feed'
   }
@@ -34,14 +29,14 @@ Router.get('/', (req, res) => {
         id: repo.href,
         link: repo.href,
         description: repo.description,
-        date: updatedDate
+        date: new Date()
       })
     })
 
     feed.addCategory('Technology')
 
     console.log(updatedDate)
-    res.setHeader('Last-Modified', updatedDate)
+    res.setHeader('Last-Modified', `${updatedDate.utcOffset('+00:00').format('ddd, DD MMM YYYY HH:mm:ss')} GMT`)
     res.status(200).send(feed.atom1())
   })
 })
