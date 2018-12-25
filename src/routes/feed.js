@@ -1,10 +1,10 @@
 import { Feed } from 'feed'
 import trending from 'trending-github'
-import Moment from 'moment'
+import moment from 'moment'
 const Router = require('express').Router()
 
 // const updatedDate = new Date()
-const updatedDate = Moment().hour(0).minute(0).second(0).millisecond(0)
+const updatedDate = moment().hour(0).minute(0).second(0).millisecond(0)
 
 const feed = new Feed({
   title: 'GitHub Trend RSS',
@@ -18,27 +18,43 @@ const feed = new Feed({
   }
 })
 
+// const checkIfSinceModified = (ifModifiedSince, modified, notModified) => {
+//   if (ifModifiedSince !== undefined && moment(ifModifiedSince).isAfter(updatedDate)) {
+//     modified()
+//   } else {
+//     notModified()
+//   }
+// }
+
 Router.get('/', (req, res) => {
-  const lang = req.query.lang
-  const period = req.query.period
+  const ifModifiedSince = req.header('If-Modified-Since')
+  console.log(moment(ifModifiedSince).isSameOrBefore(updatedDate))
+  // console.log(req.getHeader())
+  // console.log(ifModifiedSince)
 
-  trending(period, lang).then(repos => {
-    repos.forEach(repo => {
-      feed.addItem({
-        title: repo.name,
-        id: repo.href,
-        link: repo.href,
-        description: repo.description,
-        date: new Date()
+  if (ifModifiedSince !== undefined && moment(ifModifiedSince).isSameOrAfter(updatedDate)) {
+    res.status(304).send()
+  } else {
+    const lang = req.query.lang
+    const period = req.query.period
+
+    trending(period, lang).then(repos => {
+      repos.forEach(repo => {
+        feed.addItem({
+          title: repo.name,
+          id: repo.href,
+          link: repo.href,
+          description: repo.description,
+          date: new Date()
+        })
       })
+
+      feed.addCategory('Technology')
+
+      res.setHeader('Last-Modified', `${updatedDate.utcOffset('+00:00').format('ddd, DD MMM YYYY HH:mm:ss')} GMT`)
+      res.status(200).send(feed.atom1())
     })
-
-    feed.addCategory('Technology')
-
-    console.log(updatedDate)
-    res.setHeader('Last-Modified', `${updatedDate.utcOffset('+00:00').format('ddd, DD MMM YYYY HH:mm:ss')} GMT`)
-    res.status(200).send(feed.atom1())
-  })
+  }
 })
 
 module.exports = Router
